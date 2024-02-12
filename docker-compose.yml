@@ -1,0 +1,91 @@
+version: "3.5"
+
+services:
+  db:
+    image: mysql:8.3.0
+    container_name: rinha-mysql
+    hostname: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=rinha
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      interval: 1s
+      timeout: 60s
+      retries: 60
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "250MB"
+
+  api01: &api
+#    image: h-ssiqueira/rinhabackend2024q1:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: api01
+    environment:
+      - MYSQL_HOST=rinha-mysql
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+    ports:
+      - "8081:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: "curl -f http://api01:8081"
+      interval: 1s
+      timeout: 40s
+      retries: 40
+    deploy:
+      resources:
+        limits:
+          cpus: "0.45"
+          memory: "145MB"
+
+  api02:
+    <<: *api
+    hostname: api02
+    environment:
+      - MYSQL_HOST=rinha-mysql
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWORD=root
+    ports:
+      - "8082:8080"
+    healthcheck:
+      test: "curl -f http://api02:8082"
+      interval: 1s
+      timeout: 40s
+      retries: 40
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      api01:
+        condition: service_healthy
+      api02:
+        condition: service_healthy
+    ports:
+      - "9999:9999"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "10MB"
+
+# O uso do modo `bridge` deve ser adequado à carga que será usada no teste.
+# A edição anterior se beneficiou do modo host pois o volume de requisições
+# era relativamente alto e a virtualização da rede se tornou um gargalo, mas
+# este modo é mais complexo de ser configurado. Fique à vontade para usar o
+# modo que quiser desde que não conflite com portas trivialmente usadas em um
+# SO.
+networks:
+  default:
+    driver: bridge
+    name: rinha-nginx-2024q1
