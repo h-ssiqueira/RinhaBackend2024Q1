@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 
 import static com.hss.rinhabackend2024q1.dto.TipoTransacaoEnum.d;
 import static org.springframework.data.domain.Sort.Direction.DESC;
-import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
 @Service
 public class RinhaServiceBean implements RinhaService {
@@ -33,8 +32,8 @@ public class RinhaServiceBean implements RinhaService {
     }
 
     @Override
-    @Transactional(transactionManager = "transactionManagerRinha", rollbackFor = NotEnoughMoneyException.class, propagation = REQUIRES_NEW)
-    synchronized public TransacaoResponseDTO transfer(TransacaoRequestDTO dto, Long id) throws NotEnoughMoneyException, ClientNotFoundException {
+    @Transactional(transactionManager = "transactionManagerRinha", rollbackFor = NotEnoughMoneyException.class)
+    public TransacaoResponseDTO transfer(TransacaoRequestDTO dto, Long id) throws NotEnoughMoneyException, ClientNotFoundException {
         var user = clienteRepository.findById(id).orElseThrow(ClientNotFoundException::new);
 
         if(dto.tipo().equals(d)) {
@@ -51,8 +50,8 @@ public class RinhaServiceBean implements RinhaService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    synchronized public ExtratoResponseDTO statement(Long id) throws ClientNotFoundException {
+    @Transactional(transactionManager = "transactionManagerRinha", readOnly = true)
+    public ExtratoResponseDTO statement(Long id) throws ClientNotFoundException {
         var client = clienteRepository.findById(id).orElseThrow(ClientNotFoundException::new);
         var page = transacaoRepository.findLastTransactionsById(id, PageRequest.of(0,10,DESC,"efetuada"));
         return new ExtratoResponseDTO(new SaldoDTO(client.getSaldo(), LocalDateTime.now(), client.getLimite()), page.getContent());

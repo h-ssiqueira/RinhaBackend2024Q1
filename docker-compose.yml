@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.9"
 
 services:
   db:
@@ -21,7 +21,7 @@ services:
       resources:
         limits:
           cpus: "0.4"
-          memory: "200MB"
+          memory: "170MB"
 
   api1: &api
 #    image: h-ssiqueira/rinhabackend2024q1:latest
@@ -42,7 +42,7 @@ services:
       resources:
         limits:
           cpus: "0.5"
-          memory: "170MB"
+          memory: "180MB"
 
   api2:
     <<: *api
@@ -67,7 +67,7 @@ services:
       resources:
         limits:
           cpus: "0.1"
-          memory: "10MB"
+          memory: "20MB"
 
 # O uso do modo `bridge` deve ser adequado à carga que será usada no teste.
 # A edição anterior se beneficiou do modo host pois o volume de requisições
@@ -76,6 +76,4 @@ services:
 # modo que quiser desde que não conflite com portas trivialmente usadas em um
 # SO.
 networks:
-  default:
-    driver: bridge
-    name: rinha-nginx-2024q1
+  rinha-nginx-2024q1:
