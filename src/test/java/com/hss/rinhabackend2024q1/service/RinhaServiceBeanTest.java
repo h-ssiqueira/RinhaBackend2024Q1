@@ -4,9 +4,9 @@ import com.hss.rinhabackend2024q1.dto.TipoTransacaoEnum;
 import com.hss.rinhabackend2024q1.dto.TransacaoRequestDTO;
 import com.hss.rinhabackend2024q1.exception.ClientNotFoundException;
 import com.hss.rinhabackend2024q1.exception.NotEnoughMoneyException;
-import com.hss.rinhabackend2024q1.persistence.ClientRepository;
-import com.hss.rinhabackend2024q1.persistence.TransactionRepository;
-import com.hss.rinhabackend2024q1.persistence.model.Client;
+import com.hss.rinhabackend2024q1.persistence.ClienteRepository;
+import com.hss.rinhabackend2024q1.persistence.TransacaoRepository;
+import com.hss.rinhabackend2024q1.persistence.model.Cliente;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,61 +39,61 @@ import static org.mockito.Mockito.when;
 class RinhaServiceBeanTest {
 
     @Mock
-    private ClientRepository clientRepository;
+    private ClienteRepository clienteRepository;
 
     @Mock
-    private TransactionRepository transactionRepository;
+    private TransacaoRepository transacaoRepository;
 
     @InjectMocks
     private RinhaServiceBean service;
 
     @AfterEach
     void checkMock() {
-        verify(clientRepository).findById(anyLong());
+        verify(clienteRepository).findById(anyLong());
     }
 
     @ParameterizedTest
     @EnumSource(TipoTransacaoEnum.class)
     void transferSuccess(TipoTransacaoEnum type) throws NotEnoughMoneyException, ClientNotFoundException {
-        when(clientRepository.findById(anyLong())).thenReturn(of(buildClient()));
-        when(clientRepository.save(any())).thenReturn(buildClient());
+        when(clienteRepository.findById(anyLong())).thenReturn(of(buildClient()));
+        when(clienteRepository.save(any())).thenReturn(buildClient());
 
         var response = service.transfer(new TransacaoRequestDTO(1L, type,"desc"),1L);
 
         assertThat(response, notNullValue());
-        verify(clientRepository).save(any());
+        verify(clienteRepository).save(any());
     }
 
     @ParameterizedTest
     @MethodSource("transactionExceptionTestParams")
     void transferExceptions(Class<Exception> ex, TransacaoRequestDTO request, Long id) {
-        when(clientRepository.findById(5L)).thenReturn(of(buildClient()));
-        when(clientRepository.findById(6L)).thenReturn(empty());
+        when(clienteRepository.findById(5L)).thenReturn(of(buildClient()));
+        when(clienteRepository.findById(6L)).thenReturn(empty());
 
         assertThrows(ex, () -> service.transfer(request,id));
     }
 
     @Test
     void statementSuccess() throws ClientNotFoundException {
-        when(clientRepository.findById(anyLong())).thenReturn(of(buildClient()));
-        when(transactionRepository.findLastTransactionsById(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(new ArrayList<>()));
+        when(clienteRepository.findById(anyLong())).thenReturn(of(buildClient()));
+        when(transacaoRepository.findLastTransactionsById(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(new ArrayList<>()));
 
         var response = service.statement(1L);
 
         assertThat(response, notNullValue());
 
-        verify(transactionRepository).findLastTransactionsById(anyLong(), any(Pageable.class));
+        verify(transacaoRepository).findLastTransactionsById(anyLong(), any(Pageable.class));
     }
 
     @Test
     void statementNotFound() {
-        when(clientRepository.findById(anyLong())).thenReturn(empty());
+        when(clienteRepository.findById(anyLong())).thenReturn(empty());
 
         assertThrows(ClientNotFoundException.class, () -> service.statement(6L));
     }
 
-    private Client buildClient() {
-        return new Client(123L,12300L);
+    private Cliente buildClient() {
+        return new Cliente(123L,12300L);
     }
 
     private static Stream<?> transactionExceptionTestParams() {

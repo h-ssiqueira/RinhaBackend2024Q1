@@ -2,75 +2,65 @@ version: "3.5"
 
 services:
   db:
-    image: mysql:8.3.0
-    container_name: rinha-mysql
+    image: postgres:16.1
+    container_name: rinha-db
     hostname: db
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=rinha
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=rinha
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "3306:3306"
+      - "5432:5432"
     healthcheck:
-      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      test: pg_isready -U postgres
       interval: 1s
-      timeout: 60s
-      retries: 60
+      timeout: 20s
+      retries: 20
     deploy:
       resources:
         limits:
-          cpus: "0.5"
-          memory: "250MB"
+          cpus: "0.4"
+          memory: "200MB"
 
-  api01: &api
+  api1: &api
 #    image: h-ssiqueira/rinhabackend2024q1:latest
     build:
       context: .
       dockerfile: Dockerfile
-    hostname: api01
+    hostname: api1
     environment:
-      - MYSQL_HOST=rinha-mysql
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=root
+      - POSTGRESQL_HOST=rinha-db
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=admin
     ports:
       - "8081:8080"
     depends_on:
       db:
         condition: service_healthy
-    healthcheck:
-      test: "curl -f http://api01:8081"
-      interval: 1s
-      timeout: 40s
-      retries: 40
     deploy:
       resources:
         limits:
-          cpus: "0.45"
-          memory: "145MB"
+          cpus: "0.5"
+          memory: "170MB"
 
-  api02:
+  api2:
     <<: *api
-    hostname: api02
+    hostname: api2
     environment:
-      - MYSQL_HOST=rinha-mysql
-      - MYSQL_USERNAME=root
-      - MYSQL_PASSWORD=root
+      - POSTGRESQL_HOST=rinha-db
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=admin
     ports:
       - "8082:8080"
-    healthcheck:
-      test: "curl -f http://api02:8082"
-      interval: 1s
-      timeout: 40s
-      retries: 40
 
   nginx:
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      api01:
-        condition: service_healthy
-      api02:
-        condition: service_healthy
+      - api1
+      - api2
     ports:
       - "9999:9999"
     deploy:

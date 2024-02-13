@@ -31,8 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class RinhaControllerTest {
 
-    private static final String URI_TRANSACTION = "/api/v1/clientes/{id}/transacao";
-    private static final String URI_STATEMENT = "/api/v1/clientes/{id}/extrato";
+    private static final String URI_TRANSACTION = "/clientes/{id}/transacoes";
+    private static final String URI_STATEMENT = "/clientes/{id}/extrato";
 
     private static final String VALID_TRANSACTION_REQUEST = """
                                 {

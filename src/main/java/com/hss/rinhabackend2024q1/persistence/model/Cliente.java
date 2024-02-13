@@ -14,26 +14,26 @@ import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "client")
-public class Client {
+@Table(name = "cliente")
+public class Cliente {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(name = "`limit`")
+    @Column(name = "limite")
     private Long limite;
 
-    @Column(name = "balance")
+    @Column(name = "saldo")
     private Long saldo;
 
     @OneToMany(mappedBy = "cliente", cascade = ALL)
     private List<Transacao> transacoes;
 
-    public Client() {}
+    public Cliente() {}
 
-    public Client(Long limite, Long saldo) {
+    public Cliente(Long limite, Long saldo) {
         this.limite = limite;
         this.saldo = saldo;
     }

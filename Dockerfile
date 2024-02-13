@@ -13,4 +13,4 @@ COPY /target/RinhaBackend2024Q1Application.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseParallelGC", "-XX:TieredStopAtLevel=1", "-noverify", "-jar", "app.jar", "--spring.config.location=classpath:/application.properties"]

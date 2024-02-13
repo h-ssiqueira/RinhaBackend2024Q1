@@ -20,8 +20,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 public class RinhaController {
 
-    private static final String transacaoPath = "/api/v1/clientes/{id}/transacao";
-    private static final String extratoPath = "/api/v1/clientes/{id}/extrato";
+    private static final String transacaoPath = "/clientes/{id}/transacoes";
+    private static final String extratoPath = "/clientes/{id}/extrato";
 
     private final RinhaService rinhaService;
 

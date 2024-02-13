@@ -19,10 +19,10 @@
 
 		<maven.assembly.plugin.version>3.6.0</maven.assembly.plugin.version>
 		<maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
-
+		<postgresql.driver.version>42.7.1</postgresql.driver.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<liquibase.version>4.25.0</liquibase.version>
-		<mysql.connector.version>8.3.0</mysql.connector.version>
+		<spring.version>6.1.3</spring.version>
 		<spring.boot.version>3.2.2</spring.boot.version>
 	</properties>
 
@@ -41,6 +41,23 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<version>${spring.boot.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-tomcat</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-undertow</artifactId>
+			<version>${spring.boot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-indexer</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -58,10 +75,9 @@
 			<version>${liquibase.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.mysql</groupId>
-			<artifactId>mysql-connector-j</artifactId>
-			<version>${mysql.connector.version}</version>
-			<scope>runtime</scope>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.driver.version}</version>
 		</dependency>
 
 		<!-- Testing -->

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface TransactionRepository extends JpaRepository<Transacao, Long> {
+public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
 
     @Query("""
             SELECT new com.hss.rinhabackend2024q1.dto.HistoricoDTO(t.valor, t.tipo, t.descricao, t.efetuada) 
