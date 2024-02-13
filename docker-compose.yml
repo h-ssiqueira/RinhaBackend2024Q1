@@ -76,4 +76,6 @@ services:
 # modo que quiser desde que não conflite com portas trivialmente usadas em um
 # SO.
 networks:
-  rinha-nginx-2024q1:
+  default:
+    driver: bridge
+    name: rinha-nginx-2024q1

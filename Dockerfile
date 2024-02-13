@@ -1,23 +1,20 @@
-#FROM maven:3.9.6 AS build
-FROM openjdk:21-jdk
-ENV TIMEZONE=${timezone:-"America/Sao_Paulo"}
+FROM openjdk:21-jdk as BUILD
 
-#WORKDIR /app
+WORKDIR /app
 
-#COPY pom.xml /app
-#COPY src /app/src
-#COPY .mvn /app/.mvn
-#COPY mvnw /app/mvnw
+COPY pom.xml /app
+COPY src /app/src
+COPY .mvn /app/.mvn
+COPY mvnw /app/mvnw
 
-#RUN ./mvnw clean package -DskipTests
+RUN ./mvnw clean package -DskipTests
+######################################
+FROM openjdk:21-jdk as RUNTIME
 
+WORKDIR /app
 
-
-#WORKDIR /app
-
-#COPY --from=build /app/target/RinhaBackend2024Q1Application.jar /app/RinhaBackend2024Q1Application.jar
-COPY /target/RinhaBackend2024Q1Application.jar RinhaBackend2024Q1Application.jar
+COPY --from=build /app/target/RinhaBackend2024Q1Application.jar /app/RinhaBackend2024Q1Application.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-XX:+UseParallelGC", "-XX:TieredStopAtLevel=1", "-noverify", "-Xmx128m", "-jar", "RinhaBackend2024Q1Application.jar", "--spring.config.location=classpath:/application.properties"]
+ENTRYPOINT ["java", "-XX:+UseParallelGC", "-XX:TieredStopAtLevel=1", "-noverify", "-jar", "RinhaBackend2024Q1Application.jar", "--spring.config.location=classpath:/application.properties"]
