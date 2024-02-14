@@ -23,8 +23,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
-import static com.hss.rinhabackend2024q1.dto.TipoTransacaoEnum.c;
-import static com.hss.rinhabackend2024q1.dto.TipoTransacaoEnum.d;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,7 +34,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-class RinhaServiceBeanTest {
+class RinhaServiceTest {
 
     @Mock
     private ClienteRepository clienteRepository;
@@ -45,7 +43,7 @@ class RinhaServiceBeanTest {
     private TransacaoRepository transacaoRepository;
 
     @InjectMocks
-    private RinhaServiceBean service;
+    private RinhaService service;
 
     @AfterEach
     void checkMock() {
@@ -54,11 +52,11 @@ class RinhaServiceBeanTest {
 
     @ParameterizedTest
     @EnumSource(TipoTransacaoEnum.class)
-    void transferSuccess(TipoTransacaoEnum type) throws NotEnoughMoneyException, ClientNotFoundException {
+    void transferSuccess(TipoTransacaoEnum type) throws NotEnoughMoneyException {
         when(clienteRepository.findById(anyLong())).thenReturn(of(buildClient()));
         when(clienteRepository.save(any())).thenReturn(buildClient());
 
-        var response = service.transfer(new TransacaoRequestDTO(1L, type,"desc"),1L);
+        var response = service.transfer(new TransacaoRequestDTO(1L, type.getId(),"desc"),1L);
 
         assertThat(response, notNullValue());
         verify(clienteRepository).save(any());
@@ -74,7 +72,7 @@ class RinhaServiceBeanTest {
     }
 
     @Test
-    void statementSuccess() throws ClientNotFoundException {
+    void statementSuccess() {
         when(clienteRepository.findById(anyLong())).thenReturn(of(buildClient()));
         when(transacaoRepository.findLastTransactionsById(anyLong(), any(Pageable.class))).thenReturn(new PageImpl<>(new ArrayList<>()));
 
@@ -98,8 +96,8 @@ class RinhaServiceBeanTest {
 
     private static Stream<?> transactionExceptionTestParams() {
         return Stream.of(
-                Arguments.of(NotEnoughMoneyException.class, new TransacaoRequestDTO(1000000L, d,"desc"), 5L),
-                Arguments.of(ClientNotFoundException.class, new TransacaoRequestDTO(1L, c,"desc"), 6L)
+                Arguments.of(NotEnoughMoneyException.class, new TransacaoRequestDTO(1000000L, "d","desc"), 5L),
+                Arguments.of(ClientNotFoundException.class, new TransacaoRequestDTO(1L, "c","desc"), 6L)
         );
     }
 }

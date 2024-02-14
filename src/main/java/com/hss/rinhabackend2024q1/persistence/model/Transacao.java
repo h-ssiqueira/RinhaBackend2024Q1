@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -35,7 +35,7 @@ public class Transacao {
     private String descricao;
 
     @Column(name = "data_transacao")
-    private LocalDateTime efetuada;
+    private ZonedDateTime efetuada;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
@@ -43,7 +43,7 @@ public class Transacao {
 
     public Transacao() {}
 
-    public Transacao(Long valor, TipoTransacaoEnum tipo, String descricao, LocalDateTime efetuada, Cliente cliente) {
+    public Transacao(Long valor, TipoTransacaoEnum tipo, String descricao, ZonedDateTime efetuada, Cliente cliente) {
         this.valor = valor;
         this.tipo = tipo;
         this.descricao = descricao;
@@ -66,7 +66,7 @@ public class Transacao {
         return this;
     }
 
-    public Transacao setEfetuada(LocalDateTime efetuada) {
+    public Transacao setEfetuada(ZonedDateTime efetuada) {
         this.efetuada = efetuada;
         return this;
     }
@@ -88,7 +88,7 @@ public class Transacao {
         return descricao;
     }
 
-    public LocalDateTime getEfetuada() {
+    public ZonedDateTime getEfetuada() {
         return efetuada;
     }
 
