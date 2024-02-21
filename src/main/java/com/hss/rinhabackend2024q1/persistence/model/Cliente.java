@@ -1,5 +1,6 @@
 package com.hss.rinhabackend2024q1.persistence.model;
 
+import com.hss.rinhabackend2024q1.exception.NotEnoughMoneyException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +15,7 @@ import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "cliente")
+@Table(name = "client")
 public class Cliente {
 
     @Id
@@ -22,14 +23,14 @@ public class Cliente {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(name = "limite")
+    @Column(name = "account_limit")
     private Long limite;
 
-    @Column(name = "saldo")
+    @Column(name = "balance")
     private Long saldo;
 
-    @OneToMany(mappedBy = "cliente", cascade = ALL)
-    private List<Transacao> transacoes;
+//    @OneToMany(mappedBy = "cliente", cascade = ALL)
+//    private List<Transacao> transacoes;
 
     public Cliente() {}
 
@@ -58,18 +59,18 @@ public class Cliente {
         this.saldo -= dinheiro;
     }
 
-    public void registraTransacao(Transacao transacao) {
-        if(transacoes == null) {
-            transacoes = new ArrayList<>();
-        }
-        transacoes.add(transacao);
-    }
-
     public boolean isChequeEspecialEstourado() {
         return this.saldo < - this.limite;
     }
 
-    public List<Transacao> getTransacoes() {
-        return transacoes;
-    }
+//    public void registraTransacao(Transacao transacao) {
+//        if(transacoes == null) {
+//            transacoes = new ArrayList<>();
+//        }
+//        transacoes.add(transacao);
+//    }
+
+//    public List<Transacao> getTransacoes() {
+//        return transacoes;
+//    }
 }

@@ -20,7 +20,7 @@
         <sql>
             CREATE TABLE "client" (
                 "id" SERIAL PRIMARY KEY,
-                "limit" INTEGER NOT NULL,
+                "account_limit" INTEGER NOT NULL,
                 "balance" INTEGER NOT NULL
             );
         </sql>
@@ -54,7 +54,7 @@
         </preConditions>
 
         <sql>
-            INSERT INTO "client" ("id", "limit", "balance") VALUES
+            INSERT INTO "client" ("id", "account_limit", "balance") VALUES
             (1,100000,0),
             (2,80000,0),
             (3,1000000,0),

@@ -3,6 +3,7 @@ package com.hss.rinhabackend2024q1.controller;
 import com.hss.rinhabackend2024q1.exception.ClientNotFoundException;
 import com.hss.rinhabackend2024q1.exception.NotEnoughMoneyException;
 import com.hss.rinhabackend2024q1.service.RinhaService;
+import com.hss.rinhabackend2024q1.service.RinhaServiceBean;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

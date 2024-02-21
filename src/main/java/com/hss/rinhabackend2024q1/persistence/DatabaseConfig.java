@@ -20,24 +20,24 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(transactionManagerRef = "transactionManagerRinha",
-                       entityManagerFactoryRef = "entityManagerFactoryRinha",
-                       basePackages = "com.hss.rinhabackend2024q1.persistence")
+//@EnableJpaRepositories(transactionManagerRef = "transactionManagerRinha",
+//                       entityManagerFactoryRef = "entityManagerFactoryRinha",
+//                       basePackages = "com.hss.rinhabackend2024q1.persistence")
 public class DatabaseConfig {
 
-    @Bean(name = "entityManagerFactoryRinha")
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("dataSourceRinha") DataSource dataSource) {
-        var entityManager = new LocalContainerEntityManagerFactoryBean();
-        entityManager.setDataSource(dataSource);
-        entityManager.setPackagesToScan("com.hss.rinhabackend2024q1.persistence");
-        entityManager.setPersistenceProviderClass(HibernatePersistenceProvider.class);
-        return entityManager;
-    }
-
-    @Bean("transactionManagerRinha")
-    public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactoryRinha") EntityManagerFactory entityManagerFactory) {
-        return new JpaTransactionManager(entityManagerFactory);
-    }
+//    @Bean(name = "entityManagerFactoryRinha")
+//    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("dataSourceRinha") DataSource dataSource) {
+//        var entityManager = new LocalContainerEntityManagerFactoryBean();
+//        entityManager.setDataSource(dataSource);
+//        entityManager.setPackagesToScan("com.hss.rinhabackend2024q1.persistence");
+//        entityManager.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+//        return entityManager;
+//    }
+//
+//    @Bean("transactionManagerRinha")
+//    public PlatformTransactionManager transactionManager(@Qualifier("entityManagerFactoryRinha") EntityManagerFactory entityManagerFactory) {
+//        return new JpaTransactionManager(entityManagerFactory);
+//    }
 
     @Bean
     @Primary

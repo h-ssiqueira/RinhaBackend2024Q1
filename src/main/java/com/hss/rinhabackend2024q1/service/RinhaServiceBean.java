@@ -32,7 +32,7 @@ public class RinhaServiceBean implements RinhaService {
     }
 
     @Override
-    @Transactional(transactionManager = "transactionManagerRinha", rollbackFor = NotEnoughMoneyException.class)
+    @Transactional(/*transactionManager = "transactionManagerRinha", */rollbackFor = NotEnoughMoneyException.class)
     public TransacaoResponseDTO transfer(TransacaoRequestDTO dto, Long id) throws NotEnoughMoneyException, ClientNotFoundException {
         var user = clienteRepository.findById(id).orElseThrow(ClientNotFoundException::new);
 
@@ -44,13 +44,14 @@ public class RinhaServiceBean implements RinhaService {
         } else {
             user.credito(dto.valor());
         }
-        user.registraTransacao(new Transacao(dto.valor(), dto.tipo(), dto.descricao(), LocalDateTime.now(), user));
+        //user.registraTransacao(new Transacao(dto.valor(), dto.tipo(), dto.descricao(), LocalDateTime.now(), user));
+        transacaoRepository.save(new Transacao(dto.valor(), dto.tipo(), dto.descricao(), LocalDateTime.now(), user));
         var response = clienteRepository.save(user);
         return new TransacaoResponseDTO(response.getLimite(), response.getSaldo());
     }
 
     @Override
-    @Transactional(transactionManager = "transactionManagerRinha", readOnly = true)
+    @Transactional(/*transactionManager = "transactionManagerRinha", */readOnly = true)
     public ExtratoResponseDTO statement(Long id) throws ClientNotFoundException {
         var client = clienteRepository.findById(id).orElseThrow(ClientNotFoundException::new);
         var page = transacaoRepository.findLastTransactionsById(id, PageRequest.of(0,10,DESC,"efetuada"));

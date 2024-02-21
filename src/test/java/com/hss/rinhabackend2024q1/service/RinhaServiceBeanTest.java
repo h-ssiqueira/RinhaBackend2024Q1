@@ -16,9 +16,10 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.stream.Stream;
@@ -34,8 +35,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.quality.Strictness.LENIENT;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class RinhaServiceBeanTest {
 
     @Mock
@@ -65,6 +67,7 @@ class RinhaServiceBeanTest {
     }
 
     @ParameterizedTest
+    @MockitoSettings(strictness = LENIENT)
     @MethodSource("transactionExceptionTestParams")
     void transferExceptions(Class<Exception> ex, TransacaoRequestDTO request, Long id) {
         when(clienteRepository.findById(5L)).thenReturn(of(buildClient()));

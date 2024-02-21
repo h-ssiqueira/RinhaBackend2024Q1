@@ -16,7 +16,7 @@ import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "transacao")
+@Table(name = "transaction")
 public class Transacao {
 
     @Id
@@ -24,21 +24,21 @@ public class Transacao {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "valor")
+    @Column(name = "value")
     private Long valor;
 
-    @Column(name = "tipo")
+    @Column(name = "type")
     @Enumerated(STRING)
     private TipoTransacaoEnum tipo;
 
-    @Column(name = "descricao")
+    @Column(name = "description")
     private String descricao;
 
-    @Column(name = "data_transacao")
+    @Column(name = "transaction_date")
     private LocalDateTime efetuada;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "client_id")
     private Cliente cliente;
 
     public Transacao() {}
