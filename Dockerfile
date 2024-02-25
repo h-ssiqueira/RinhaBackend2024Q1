@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk as BUILD
+FROM openjdk:21-jdk AS BUILD
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY mvnw /app/mvnw
 
 RUN ./mvnw clean package -DskipTests
 ######################################
-FROM openjdk:21-jdk as RUNTIME
+FROM openjdk:21-jdk AS RUNTIME
 
 WORKDIR /app
 
@@ -17,4 +17,5 @@ COPY --from=build /app/target/RinhaBackend2024Q1Application.jar /app/RinhaBacken
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-XX:+UseParallelGC", "-XX:MaxGCPauseMillis=200", "-XX:GCTimeRatio=12", "-XX:TieredStopAtLevel=1", "-jar", "RinhaBackend2024Q1Application.jar"]
+ENTRYPOINT ["java", "-XX:+UseParallelGC", "-XX:TieredStopAtLevel=1", "-jar", "RinhaBackend2024Q1Application.jar"]
+#, "-XX:MaxGCPauseMillis=200", "-XX:GCTimeRatio=12",

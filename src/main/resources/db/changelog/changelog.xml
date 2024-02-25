@@ -43,6 +43,9 @@
                 "transaction_date" TIMESTAMP NOT NULL,
                 FOREIGN KEY ("client_id") REFERENCES "client"("id")
             );
+
+            CREATE INDEX idx_client_id ON "transaction" ("client_id");
+            CREATE INDEX idx_transaction_date ON "transaction" ("transaction_date" DESC);
         </sql>
     </changeSet>
 

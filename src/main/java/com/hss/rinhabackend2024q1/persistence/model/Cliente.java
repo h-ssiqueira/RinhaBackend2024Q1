@@ -59,8 +59,8 @@ public class Cliente {
         this.saldo -= dinheiro;
     }
 
-    public boolean isChequeEspecialEstourado() {
-        return this.saldo < - this.limite;
+    public boolean isChequeEspecialEstourado(Long valor) {
+        return (this.saldo - valor) < - this.limite;
     }
 
 //    public void registraTransacao(Transacao transacao) {

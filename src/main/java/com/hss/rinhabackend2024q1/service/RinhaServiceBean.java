@@ -32,14 +32,15 @@ public class RinhaServiceBean implements RinhaService {
     }
 
     @Override
-    @Transactional(/*transactionManager = "transactionManagerRinha", */rollbackFor = NotEnoughMoneyException.class)
+    @Transactional(/*transactionManager = "transactionManagerRinha", rollbackFor = NotEnoughMoneyException.class*/)
     public TransacaoResponseDTO transfer(TransacaoRequestDTO dto, Long id) throws NotEnoughMoneyException, ClientNotFoundException {
         var user = clienteRepository.findById(id).orElseThrow(ClientNotFoundException::new);
 
         if(dto.tipo().equals(d)) {
-            user.debito(dto.valor());
-            if(user.isChequeEspecialEstourado()) {
+            if(user.isChequeEspecialEstourado(dto.valor())) {
                 throw new NotEnoughMoneyException();
+            } else {
+                user.debito(dto.valor());
             }
         } else {
             user.credito(dto.valor());
