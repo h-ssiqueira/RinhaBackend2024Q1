@@ -21,7 +21,7 @@
 		<maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
 		<postgresql.driver.version>42.7.1</postgresql.driver.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
-		<liquibase.version>4.25.0</liquibase.version>
+		<liquibase.version>4.26.0</liquibase.version>
 		<spring.version>6.1.3</spring.version>
 		<spring.boot.version>3.2.2</spring.boot.version>
 	</properties>

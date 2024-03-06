@@ -17,5 +17,5 @@ COPY --from=build /app/target/RinhaBackend2024Q1Application.jar /app/RinhaBacken
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-XX:+UseParallelGC", "-XX:TieredStopAtLevel=1", "-jar", "RinhaBackend2024Q1Application.jar"]
-#, "-XX:MaxGCPauseMillis=200", "-XX:GCTimeRatio=12",
+ENTRYPOINT ["java", "-XX:TieredStopAtLevel=1", "-jar", "RinhaBackend2024Q1Application.jar"]
+#, "-XX:MaxGCPauseMillis=200", "-XX:GCTimeRatio=12", "-XX:+UseParallelGC",

@@ -1,23 +1,23 @@
-CREATE TABLE IF NOT EXISTS "cliente" (
+CREATE TABLE IF NOT EXISTS "client" (
     "id" SERIAL PRIMARY KEY,
-    "limite" INTEGER NOT NULL,
-    "saldo" INTEGER NOT NULL
+    "account_limit" INTEGER NOT NULL,
+    "balance" INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "transacao" (
+CREATE TABLE IF NOT EXISTS "transaction" (
     "id" SERIAL PRIMARY KEY,
-    "cliente_id" INTEGER NOT NULL,
-    "valor" INTEGER NOT NULL,
-    "tipo" CHAR(1) NOT NULL,
-    "descricao" CHAR(10) NOT NULL,
-    "data_transacao" TIMESTAMP NOT NULL,
-    FOREIGN KEY ("cliente_id") REFERENCES "cliente"("id")
+    "client_id" INTEGER NOT NULL,
+    "value" INTEGER NOT NULL,
+    "type" CHAR(1) NOT NULL,
+    "description" CHAR(10) NOT NULL,
+    "transaction_date" TIMESTAMP NOT NULL,
+    FOREIGN KEY ("client_id") REFERENCES "client"("id")
 );
 
-CREATE INDEX IF NOT EXISTS idx_cliente_id ON "transacao" ("cliente_id");
-CREATE INDEX IF NOT EXISTS idx_data_transacao ON "transacao" ("data_transacao" DESC);
+CREATE INDEX IF NOT EXISTS idx_client_id ON "transaction" ("client_id");
+CREATE INDEX IF NOT EXISTS idx_data_transaction ON "transaction" ("transaction_date" DESC);
 
-INSERT INTO "cliente" ("id", "limite", "saldo") VALUES
+INSERT INTO "client" ("id", "account_limit", "balance") VALUES
     (1,100000,0),
     (2,80000,0),
     (3,1000000,0),

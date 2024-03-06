@@ -5,13 +5,18 @@ import com.hss.rinhabackend2024q1.exception.NotEnoughMoneyException;
 import com.hss.rinhabackend2024q1.service.RinhaService;
 import com.hss.rinhabackend2024q1.service.RinhaServiceBean;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.stream.Stream;
@@ -28,8 +33,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = "spring.liquibase.enabled=false")
+@SpringBootTest
 @AutoConfigureMockMvc
+@EnableAutoConfiguration(exclude = LiquibaseAutoConfiguration.class)
 class RinhaControllerTest {
 
     private static final String URI_TRANSACTION = "/clientes/{id}/transacoes";

@@ -8,8 +8,8 @@ services:
     environment:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=rinha
-    #volumes:
-    #  - ./schema.sql:/docker-entrypoint-initdb.d/init.sql
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/init.sql
     #  - ./postgres.conf:/docker-entrypoint-initdb.d/postgresql.conf
     #command: postgres -c config_file=/docker-entrypoint-initdb.d/postgresql.conf
     ports:
