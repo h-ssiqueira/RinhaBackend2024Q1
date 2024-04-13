@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: Rinha Backend 2024 Q1
+  version: v1
+paths:
+  /clientes/{id}/transacoes:
+    post:
+      summary: Efetuar transações de crédito ou débito
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/transacaoRequest"
+      responses:
+        200:
+          $ref: "#/components/responses/transacaoResponse"
+        400:
+          description: Requisição com parâmetros inválidos ou não informados
+        404:
+          description: Cliente não encontrado
+        422:
+          description: Saldo insuficiente
+  /clientes/{id}/extrato:
+    get:
+      summary: Efetuar consultas de extrato
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          $ref: "#/components/responses/extratoResponse"
+        400:
+          description: Requisição com parâmetros inválidos ou não informados
+        404:
+          description: Cliente não encontrado
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      description: identificador de cliente
+      schema:
+        type: integer
+      required: true
+  schemas:
+    transacaoRequest:
+      type: object
+      properties:
+        valor:
+          type: integer
+          example: 1000
+          description: Valor representado em centavos
+        tipo:
+          type: string
+          enum: ['c','d']
+          description: c -> crédito, d -> débito
+        descricao:
+          type: string
+          minimum: 1
+          maximum: 10
+          example: descricao
+      required:
+        - valor
+        - tipo
+        - descricao
+  responses:
+    transacaoResponse:
+      description: Transação efetuada
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              limite:
+                type: integer
+                example: 100000
+              saldo:
+                type: integer
+                example: -9098
+    extratoResponse:
+      description: Extrato efetuado
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              saldo:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    example: -9098
+                  data_extrato:
+                    type: string
+                    format: date-time
+                  limite:
+                    type: integer
+                    example: 100000
+              ultimas_transacoes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    valor:
+                      type: integer
+                      example: 10
+                    tipo:
+                      type: string
+                      enum: ['c','d']
+                      description: c -> crédito, d -> débito
+                    descricao:
+                      type: string
+                      minimum: 1
+                      maximum: 10
+                      example: 'descricao'
+                    realizada_em:
+                      type: string
+                      format: date-time

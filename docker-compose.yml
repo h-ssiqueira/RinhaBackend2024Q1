@@ -1,0 +1,77 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16.1
+    container_name: rinha-db
+    hostname: db
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=rinha
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/init.sql
+    #  - ./postgres.conf:/docker-entrypoint-initdb.d/postgresql.conf
+    #command: postgres -c config_file=/docker-entrypoint-initdb.d/postgresql.conf
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 1s
+      timeout: 20s
+      retries: 20
+    deploy:
+      resources:
+        limits:
+          cpus: "0.4"
+          memory: "170MB"
+
+  api1: &api
+#    image: h-ssiqueira/rinhabackend2024q1:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: api1
+    environment:
+      - POSTGRESQL_HOST=rinha-db
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=admin
+    ports:
+      - "8081:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "180MB"
+
+  api2:
+    <<: *api
+    hostname: api2
+    environment:
+      - POSTGRESQL_HOST=rinha-db
+      - POSTGRESQL_USERNAME=postgres
+      - POSTGRESQL_PASSWORD=admin
+    ports:
+      - "8082:8080"
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api1
+      - api2
+    ports:
+      - "9999:9999"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: "20MB"
+
+networks:
+  default:
+    driver: bridge
+    name: rinha-nginx-2024q1
